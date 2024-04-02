@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{%block body%}
+<style>
+    body {
+      background-image: url('https://i.pinimg.com/originals/22/3e/af/223eaf24b7c01a1bacd6bb241c050f1b.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+</style>
+<hr style='color:white;width:80%;margin-top:10%'>
+<div style='background-color:rgb(255, 255, 255, 0.5); margin-left:14%;margin-right:14%;padding:0.3%;text-align:center'>
+    <h1>Добро Пожаловать!</h1>
+    <h3>Располагайтесь поудобнее. Сейчас не произойдёт ничего. Пока что...</h3>
+</div>
+
+<hr style='color:white;width:75%'>
+
+<div style='background-color:rgb(255, 255, 255, 0.5); margin-left:14%;margin-right:14%;padding:0.3%;text-align:center'>
+
+    <h3>Таблица с задачами:</h3>
+    <ul id="UlTask">
+        
+    </ul>
+</div>
+
+<form id="taskFormCreate">
+    <label>Название</label>
+    <input type="text" id="taskFormTitle">
+    <label>Описание</label>
+    <input type="text" id="taskFormDescription">
+    <button id="taskFormCreatebtn">Создать задачу</button>
+</form>
+    
+<script src="{{url_for('static', path='index_script.js')}}"></script>
+  
+
+<script>
+
+const reqGetListTask = 'http://127.0.0.1:8000/api/tasks/list/'
+const reqPostCreateTask = 'http://127.0.0.1:8000/api/tasks/create/'
+const taskObject = {
+    list_task: [],
+}
+
+
+fetch(new Request(reqGetListTask)).then((response) => 
+response.json().then((data) => {
+    taskObject.list_task.push(data)
+    taskObject.list_task =data
+    console.log(taskObject.list_task)
+
+
+    ulTask = document.getElementById('UlTask');
+    for (let i = 0; i < taskObject.list_task.length; i++){
+        element_li = document.createElement('li');
+        element_id = document.createElement('p');
+        element_title = document.createElement('h2');
+        element_description = document.createElement('p');
+        element_status = document.createElement('p');
+        console.log(taskObject.list_task)
+        element_title = taskObject.list_task[i].title;
+        element_li.append(element_title);
+        ulTask.append(element_li);
+    }
+})
+
+)
+
+
+const taskFormCreatebtn = document.getElementById('taskFormCreatebtn');
+taskFormCreatebtn.addEventListener('click', function(event) {
+    event.preventDefault();
+    let taskFormTitle = document.getElementById('taskFormTitle');
+    let taskFormDescription = document.getElementById('taskFormDescription');
+    data = {'title': taskFormTitle.value, 'description': taskFormDescription.value};
+    fetch(reqPostCreateTask, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    taskFormTitle.value = '';
+    taskFormDescription.value = '';
+    alert('Задача создалась!')
+})
+
+
+</script>
+
+{%endblock%}  
