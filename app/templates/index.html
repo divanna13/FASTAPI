@@ -24,6 +24,8 @@
     </ul>
 </div>
 
+<button></button>
+
 <form id="taskFormCreate">
     <label>Название</label>
     <input type="text" id="taskFormTitle">
@@ -44,7 +46,7 @@ const taskObject = {
 }
 
 
-fetch(new Request(reqGetListTask)).then((response) => 
+/* fetch(new Request(reqGetListTask)).then((response) => 
 response.json().then((data) => {
     taskObject.list_task.push(data)
     taskObject.list_task =data
@@ -65,8 +67,31 @@ response.json().then((data) => {
     }
 })
 
-)
+) */
+const getTask = document.getElementById('getTask');
+getTask.addEventListener('click', renderTasks);
 
+
+function renderTasks(){
+    fetch(reqGetListTask).then(response => response.json()).then(
+        tasks => {
+            const ulTask = document.getElementById('ulTask');
+            for(let i = 0; i < tasks.length; i++){
+                element_li = document.createElement('li');
+                element_title = document.createElement('h3');
+                element_description = document.createElement('p');
+                element_status = document.createElement('p');
+                element_title.textContent = tasks[i].title;
+                element_description.textContent = tasks[i].description;
+                element_status.textContent = tasks[i].status;
+                element_div = document.createElement('div');
+                element_div.append(element_title, element_description, element_status);
+                element_li.append(element_div);
+                ulTask.append(element_li);
+            }
+        }
+    )
+}
 
 const taskFormCreatebtn = document.getElementById('taskFormCreatebtn');
 taskFormCreatebtn.addEventListener('click', function(event) {
