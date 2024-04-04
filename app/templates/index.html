@@ -24,7 +24,7 @@
     </ul>
 </div>
 
-<button></button>
+<button id="getTask">Посмотреть задачи</button>
 
 <form id="taskFormCreate">
     <label>Название</label>
@@ -81,11 +81,23 @@ function renderTasks(){
                 element_title = document.createElement('h3');
                 element_description = document.createElement('p');
                 element_status = document.createElement('p');
+                element_button_delete = document.createElement('button');
+                element_button_delete.textContent = 'Удалить';
+                element_button_delete.style.background = 'red';
+                element_button_delete.id = `task_id=${tasks[i].id}`
+                element_button_delete.addEventListener('click', function(event){
+                    event.preventDefault();
+                    url = 'http://127.0.0.1:8000/api/tasks/delete/' + '?' + this.id
+                    fetch(url, {
+                        method: 'DELETE'
+                    })
+                })
+
                 element_title.textContent = tasks[i].title;
                 element_description.textContent = tasks[i].description;
                 element_status.textContent = tasks[i].status;
                 element_div = document.createElement('div');
-                element_div.append(element_title, element_description, element_status);
+                element_div.append(element_title, element_description, element_status, element_button_delete);
                 element_li.append(element_div);
                 ulTask.append(element_li);
             }
